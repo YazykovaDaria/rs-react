@@ -1,7 +1,13 @@
 import React from 'react';
+import Search from 'src/components/search/Search';
 
 function Main() {
-  return <>Main page</>;
+  return (
+    <>
+      <p>Main page</p>
+      <Search />
+    </>
+  );
 }
 
 export default Main;

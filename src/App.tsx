@@ -1,11 +1,11 @@
 import React from 'react';
 import 'reset-css';
-import './App.css';
+import 'src/App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import NotFound from './pages/NotFound';
-import AboutUs from './pages/AboutAs';
-import Main from './pages/Main';
-import Header from './components/Header';
+import NotFound from 'src/pages/NotFound';
+import AboutUs from 'src/pages/AboutAs';
+import Main from 'src/pages/Main';
+import Header from 'src/components/Header';
 
 function App() {
   return (
