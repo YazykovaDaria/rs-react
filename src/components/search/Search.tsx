@@ -1,12 +1,8 @@
 import React from 'react';
 
-function getValue() {
-  const savedVal = localStorage.getItem('search');
-  return savedVal || '';
+interface IProps {
+  value: string;
 }
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface IProps {}
 
 interface IState {
   value: string;
@@ -16,7 +12,7 @@ class Search extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {
-      value: getValue(),
+      value: props.value,
     };
   }
 
