@@ -1,4 +1,5 @@
 import React from 'react';
+import './style.css';
 import Card from 'src/types/card';
 
 type Props = {
@@ -6,21 +7,18 @@ type Props = {
 };
 
 function CardItem({ card }: Props) {
-  const { title, thumbnail, description, price, brand, category, discountPercentage } = card;
+  const { title, thumbnail, description, price, brand, category } = card;
   return (
-    <>
-      <p>{title}</p>
-      <div>
+    <div className="card">
+      <p className="title">{title}</p>
+      <div className="card-list">
         <img src={thumbnail} alt={title} />
-      </div>
-      <div>
-        <p>{brand}</p>
-        <p>{category}</p>
-        <p>{price}</p>
-        <p>{discountPercentage} %</p>
+        <p>{`Brand: ${brand}`}</p>
+        <p>{`Category: ${category}`}</p>
+        <p>{`Price: ${price} $`}</p>
         <p>{description}</p>
       </div>
-    </>
+    </div>
   );
 }
 

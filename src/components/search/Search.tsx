@@ -1,4 +1,5 @@
 import React from 'react';
+import './style.css';
 
 interface IProps {
   value: string;
@@ -31,8 +32,10 @@ class Search extends React.Component<IProps, IState> {
     const { value } = this.state;
     return (
       <form>
-        <input type="search" value={value} onChange={this.onValueChange} />
-        <button type="submit">Search</button>
+        <input type="search" value={value} onChange={this.onValueChange} className="search" />
+        <button type="submit" className="search search-btn">
+          Search
+        </button>
       </form>
     );
   }

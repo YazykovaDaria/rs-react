@@ -1,9 +1,20 @@
-.header {
-  display: flex;
-  justify-content: space-around;
-  padding: 0.8rem;
+
+.link.active {
+  color: rgb(68, 31, 187);
 }
 
-.active {
-  color: brown;
+.link {
+color: black;
+text-decoration: none;
+}
+
+.link:hover {
+  color: var(--side-color);
+  transition: 0.3s;
+}
+
+.title {
+  text-align: center;
+  color: var(--main-color);
+  font-weight: 600;
 }

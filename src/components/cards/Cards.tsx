@@ -9,10 +9,12 @@ type Props = {
 function Cards({ cards }: Props) {
   return (
     <>
-      <p>Products</p>
-      {cards.map((card) => (
-        <CardItem key={card.id} card={card} />
-      ))}
+      <p className="title">Products</p>
+      <div className="cards">
+        {cards.map((card) => (
+          <CardItem key={card.id} card={card} />
+        ))}
+      </div>
     </>
   );
 }

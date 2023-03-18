@@ -40,10 +40,14 @@ class Header extends React.Component<IProps, IState> {
     return (
       <>
         <div className="header">
-          <div>{activePage}</div>
-          <div onClick={() => this.setPage()} className="header">
-            <NavLink to="/">Main</NavLink>
-            <NavLink to="/about">About Us</NavLink>
+          <div className="title">{activePage}</div>
+          <div onClick={() => this.setPage()} className="header header-links">
+            <NavLink to="/" className="link">
+              Main
+            </NavLink>
+            <NavLink to="/about" className="link">
+              About Us
+            </NavLink>
           </div>
         </div>
         <Outlet />
