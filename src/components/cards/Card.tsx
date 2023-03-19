@@ -9,7 +9,7 @@ type Props = {
 function CardItem({ card }: Props) {
   const { title, thumbnail, description, price, brand, category } = card;
   return (
-    <div className="card">
+    <div className="card" data-testid="card">
       <p className="title">{title}</p>
       <div className="card-list">
         <img src={thumbnail} alt={title} />
