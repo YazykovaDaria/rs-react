@@ -29,6 +29,11 @@ class Header extends React.Component<IProps, IState> {
           activePage: 'About page',
         });
         break;
+      case '/form':
+        this.setState({
+          activePage: 'Form page',
+        });
+        break;
 
       default:
         throw new Error(`unknown path - ${path}`);
@@ -47,6 +52,9 @@ class Header extends React.Component<IProps, IState> {
             </NavLink>
             <NavLink to="/about" className="link">
               About Us
+            </NavLink>
+            <NavLink to="/form" className="link">
+              Form
             </NavLink>
           </div>
         </div>
