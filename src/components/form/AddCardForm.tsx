@@ -23,10 +23,10 @@ class AddCardForm extends React.Component {
     const file = this.img.current.files[0];
     const img = file ? URL.createObjectURL(file) : '';
     const date = this.date.current.value;
-    const isValid = this.handleValidation({ date, img, name });
+    const isValid = this.handleValidation({ name, date, img });
 
     if (isValid) {
-      alert(`data - ${name} ${date}`);
+      console.log(`data - ${name} ${date}`);
       this.setState(initStateErrors);
       event.target.reset();
     }
@@ -38,10 +38,6 @@ class AddCardForm extends React.Component {
     });
   }
 
-  // validateName(key, value) {
-
-  // }
-
   handleValidation = (data): boolean => {
     let flag = true;
     const entries = Object.entries(data);
@@ -50,16 +46,19 @@ class AddCardForm extends React.Component {
     entries.forEach(([key, val]) => {
       //console.log(val.length);
 
-      if (val.length === 0) {
-        flag = false;
+      if (val.length > 0) {
+        if (key === 'name') {
+          const char = val.charAt(0);
+          flag = char.toUpperCase() === char;
+          const message = flag ? '' : 'be big';
+          this.setError(key, message);
+        } else {
+          flag = true;
+          this.setError(key, '');
+        }
+      } else {
         this.setError(key, 'requaried');
-      }
-      if (key === 'name') {
-        const char = val.charAt(0);
-        const message = char.toUpperCase() !== char ? '' : 'be big';
-        this.setError(key, message);
-      } else if (val.length > 0) {
-        this.setError(key, '');
+        flag = false;
       }
     });
 
