@@ -1,0 +1,13 @@
+:root {
+  --main-color: rgb(2, 48, 92);
+  --side-color: rgb(20, 122, 232);
+  --btn-bg: rgb(153, 211, 243);
+  --btn-color: rgb(133, 126, 126);
+  --err-color: red;
+}
+
+body {
+margin: 0 auto;
+max-width: 1280px;
+padding: 0 0.8rem;
+}
