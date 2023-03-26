@@ -16,3 +16,10 @@
 .header-links {
   gap: 1rem;
 }
+
+.flex-wrap {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
