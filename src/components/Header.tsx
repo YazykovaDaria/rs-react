@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink, Outlet, RoutesProps } from 'react-router-dom';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface IProps {}
@@ -8,35 +8,29 @@ interface IState {
   activePage: string;
 }
 
+const routes = {
+  '/about': 'About page',
+  '/': 'Main page',
+  '/form': 'Form page',
+} as const;
+
 class Header extends React.Component<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {
-      activePage: 'Main page',
+      activePage: routes[window.location.pathname],
     };
   }
 
   setPage(): void {
     const path = window.location.pathname;
-    switch (path) {
-      case '/':
-        this.setState({
-          activePage: 'Main page',
-        });
-        break;
-      case '/about':
-        this.setState({
-          activePage: 'About page',
-        });
-        break;
-      case '/form':
-        this.setState({
-          activePage: 'Form page',
-        });
-        break;
-
-      default:
-        throw new Error(`unknown path - ${path}`);
+    const page = routes[path];
+    if (page) {
+      this.setState({
+        activePage: page,
+      });
+    } else {
+      throw new Error(`unknown path - ${path}`);
     }
   }
 
