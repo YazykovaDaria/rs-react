@@ -18,3 +18,16 @@ text-decoration: none;
   color: var(--main-color);
   font-weight: 600;
 }
+
+.btn {
+  padding: 0.5rem;
+  border-radius: 10px;
+  background-color: var(--btn-bg);
+  color: var(--btn-color);
+}
+
+.btn:hover {
+  background-color: var(--main-color);
+  transition: 0.3s;
+  cursor: pointer;
+}

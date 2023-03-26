@@ -9,9 +9,9 @@ type Props = {
 
 const Input = React.forwardRef(
   ({ type, label, error }: Props, ref: React.Ref<HTMLInputElement>) => (
-    <div>
+    <div className="form">
       <label>{label}</label>
-      <input type={type} ref={ref} />
+      <input type={type} ref={ref} className={error ? 'err' : ''} />
       {error ? <p className="err">{error}</p> : null}
     </div>
   )
