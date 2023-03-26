@@ -4,6 +4,7 @@
   flex-direction: column;
   align-items: center;
   gap: 1rem;
+  padding-bottom: 1rem;
 }
 
 .header {
@@ -22,4 +23,5 @@
   justify-content: center;
   gap: 0.5rem;
   flex-wrap: wrap;
+  width: 100%;
 }
