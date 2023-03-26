@@ -13,3 +13,12 @@ type Card = {
 };
 
 export default Card;
+
+export type User = {
+  name: string;
+  date: string;
+  img: string;
+  pets: string[];
+  language: string;
+  members: string[];
+};
