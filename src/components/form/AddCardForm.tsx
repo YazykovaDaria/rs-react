@@ -1,6 +1,6 @@
 import React from 'react';
 import './style.css';
-import { User } from 'src/types.ts/card';
+import { User } from 'src/types/card';
 import Input from './Input';
 
 type CardError = {
