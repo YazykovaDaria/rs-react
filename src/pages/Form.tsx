@@ -28,7 +28,7 @@ class FormPage extends React.Component<EmptyProps, IState> {
     return (
       <div className="wrapper">
         <AddCardForm addCard={this.addCard}></AddCardForm>
-        <div className="flex-wrap">
+        <div className="flex-wrap" data-testid="user-card">
           {this.state.cards.map((card: User) => {
             return <UserCard {...card} key={Date.now()}></UserCard>;
           })}
