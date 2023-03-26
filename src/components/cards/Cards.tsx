@@ -1,5 +1,5 @@
 import React from 'react';
-import Card from 'src/types/card';
+import Card from 'src/types.ts/card';
 import CardItem from './Card';
 
 type Props = {

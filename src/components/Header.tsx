@@ -1,21 +1,23 @@
 import React from 'react';
-import { NavLink, Outlet, RoutesProps } from 'react-router-dom';
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface IProps {}
+import { NavLink, Outlet } from 'react-router-dom';
+import EmptyProps from 'src/types/props';
 
 interface IState {
   activePage: string;
 }
 
-const routes = {
+interface Routes {
+  [key: string]: string;
+}
+
+const routes: Routes = {
   '/about': 'About page',
   '/': 'Main page',
   '/form': 'Form page',
-} as const;
+};
 
-class Header extends React.Component<IProps, IState> {
-  constructor(props: IProps) {
+class Header extends React.Component<EmptyProps, IState> {
+  constructor(props: EmptyProps) {
     super(props);
     this.state = {
       activePage: routes[window.location.pathname],

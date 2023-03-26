@@ -1,6 +1,6 @@
 import React from 'react';
 import './style.css';
-import Card from 'src/types/card';
+import Card from 'src/types.ts/card';
 
 type Props = {
   card: Card;
