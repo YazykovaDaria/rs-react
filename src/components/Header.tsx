@@ -1,10 +1,6 @@
-import React from 'react';
-import { NavLink, Outlet } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import EmptyProps from 'src/types/props';
-
-interface IState {
-  activePage: string;
-}
 
 interface Routes {
   [key: string]: string;
@@ -16,48 +12,39 @@ const routes: Routes = {
   '/form': 'Form page',
 };
 
-class Header extends React.Component<EmptyProps, IState> {
-  constructor(props: EmptyProps) {
-    super(props);
-    this.state = {
-      activePage: routes[window.location.pathname],
-    };
-  }
+const Header: React.FC<EmptyProps> = () => {
+  const location = useLocation();
+  const [activePage, setActivePage] = useState(routes[location.pathname]);
 
-  setPage(): void {
-    const path = window.location.pathname;
+  useEffect(() => {
+    const path = location.pathname;
     const page = routes[path];
     if (page) {
-      this.setState({
-        activePage: page,
-      });
+      setActivePage(page);
     } else {
-      throw new Error(`unknown path - ${path}`);
+      setActivePage('Page 404');
     }
-  }
+  }, [location]);
 
-  render() {
-    const { activePage } = this.state;
-    return (
-      <>
-        <div className="header">
-          <div className="title">{activePage}</div>
-          <div onClick={() => this.setPage()} className="header header-links">
-            <NavLink to="/" className="link">
-              Main
-            </NavLink>
-            <NavLink to="/about" className="link">
-              About Us
-            </NavLink>
-            <NavLink to="/form" className="link">
-              Form
-            </NavLink>
-          </div>
+  return (
+    <>
+      <div className="header">
+        <div className="title">{activePage}</div>
+        <div className="header header-links">
+          <NavLink to="/" className="link">
+            Main
+          </NavLink>
+          <NavLink to="/about" className="link">
+            About Us
+          </NavLink>
+          <NavLink to="/form" className="link">
+            Form
+          </NavLink>
         </div>
-        <Outlet />
-      </>
-    );
-  }
-}
+      </div>
+      <Outlet />
+    </>
+  );
+};
 
 export default Header;
