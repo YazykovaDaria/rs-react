@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './style.css';
+import { useForm } from 'react-hook-form';
 import { User } from 'src/types/card';
 import Input from './Input';
 
@@ -9,157 +10,126 @@ type CardError = {
   date: string;
   pets: string;
   members: string;
-  language: string;
+  pets: string;
 };
 
 interface IProps {
   addCard: (newCard: User) => void;
 }
 
-const initStateErrors: CardError = {
-  name: '',
-  img: '',
-  date: '',
-  pets: '',
-  members: '',
-  language: '',
-};
+const AddCardForm: React.FC<IProps> = (props) => {
+  const [showMessage, setMessage] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({ reValidateMode: 'onSubmit' });
 
-const getInputValues = (collection: NodeListOf<ChildNode>, type: string): string[] => {
-  const values: string[] = [];
-  collection.forEach((el) => {
-    if (el instanceof HTMLInputElement) {
-      if (el.checked) {
-        const value = type === 'radio' ? el.value : el.name;
-        values.push(value);
-      }
-    }
-  });
-  return values;
-};
-
-class AddCardForm extends React.Component<IProps, CardError> {
-  private img = React.createRef<HTMLInputElement>();
-  private date = React.createRef<HTMLInputElement>();
-  private name = React.createRef<HTMLInputElement>();
-  private radio = React.createRef<HTMLFieldSetElement>();
-  private checkbox = React.createRef<HTMLFieldSetElement>();
-  private select = React.createRef<HTMLSelectElement>();
-
-  constructor(props: IProps) {
-    super(props);
-    this.state = initStateErrors;
-  }
-
-  handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const name = this.name.current!.value;
-    const file = this.img.current!.files![0];
-    const img = file ? URL.createObjectURL(file) : '';
-    const date = this.date.current!.value;
-    const pets = getInputValues(this.radio.current!.childNodes, 'radio');
-    const members = getInputValues(this.checkbox.current!.childNodes, 'checkbox');
-    const language = this.select.current!.value;
-
-    const newCard = { name, date, img, pets, language, members };
-    this.handleValidation(newCard);
-    const isValid = this.handleValidation(newCard);
-    console.log(isValid);
-
-    if (isValid) {
-      this.props.addCard(newCard);
-      this.setState(initStateErrors);
-      event.currentTarget.reset();
-      alert('Card was added');
-    }
+  const onSubmit = (data) => {
+    setMessage(true);
+    const img = URL.createObjectURL(data.img[0]);
+    const newCard = { ...data, img };
+    props.addCard(newCard);
+    reset();
+    setTimeout(() => setMessage(false), 8000);
   };
 
-  setError(key: keyof CardError, message: string) {
-    this.setState({
-      [key]: message,
-    } as Pick<CardError, keyof CardError>);
-  }
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} data-testid="add-card-form" className="form">
+      <h2 className="title">Add user</h2>
 
-  handleValidation = (data: User): boolean => {
-    const entries: [string, string[] | string][] = Object.entries(data);
-    const errors: string[] = [];
+      <input
+        {...register('name', {
+          required: 'This field is required',
+          minLength: {
+            value: 3,
+            message: 'Min length is 3 chars',
+          },
+        })}
+      />
+      {errors.name && <span className="err">{errors.name.message}</span>}
 
-    entries.forEach(([stringKey, val]) => {
-      const key = stringKey as keyof CardError;
-      if (val.length > 0) {
-        if (key === 'name' && typeof val === 'string') {
-          const char = val.charAt(0);
-          const message =
-            char.toUpperCase() === char ? '' : 'name must start with a capital letter';
-          this.setError(key, message);
-          errors.push(message);
-        } else {
-          this.setError(key, '');
-        }
-      } else {
-        this.setError(key, 'requaried');
-        errors.push('err');
-      }
-    });
-    const isValid = errors.filter((val) => val !== '');
-    return isValid.length < 1;
-  };
+      <input type="date" {...register('date', { required: true })} />
+      {errors.date && <span className="err">This field is required</span>}
 
-  render() {
-    return (
-      <div data-testid="add-card-form">
-        <h2 className="title">Add user card</h2>
-        <form onSubmit={this.handleSubmit} className="form">
-          <Input ref={this.name} label="Name" type="text" error={this.state.name}></Input>
-          <Input ref={this.date} label="Date of Birth" type="date" error={this.state.date}></Input>
-          <Input ref={this.img} label="Avatar" type="file" error={this.state.img}></Input>
+      <input
+        type="file"
+        accept=".png, .jpg, .jpeg"
+        {...register('img', { required: 'This field is required' })}
+      />
+      {errors.img && <span className="err">{errors.img.message}</span>}
 
-          <fieldset ref={this.radio}>
-            <p className="form-title">Is cats cool?</p>
-            <input type="radio" id="html" name="language" value="of course"></input>
-            <label htmlFor="html">of course</label>
-            <input type="radio" id="css" name="language" value="absolutely"></input>
-            <label htmlFor="css">absolutely</label>
-            {this.state.pets ? <p className="err">{this.state.pets}</p> : null}
-          </fieldset>
+      <fieldset>
+        <input
+          {...register('members', { required: 'This field is required' })}
+          id="jiso"
+          type="checkbox"
+          value="Jisoo"
+        />
+        <label htmlFor="jiso">Jisoo</label>
+        <input
+          {...register('members', { required: 'This field is required' })}
+          type="checkbox"
+          value="Jennie"
+          id="jennie"
+        />
+        <label htmlFor="jennie">Jennie</label>
+        <input
+          {...register('members', { required: 'This field is required' })}
+          type="checkbox"
+          value="Rose"
+          id="rose"
+        />
+        <label htmlFor="rose">Rose</label>
+        <input
+          {...register('members', { required: 'This field is required' })}
+          type="checkbox"
+          value="Lisa"
+          id="lisa"
+        />
+        <label htmlFor="lisa">Lisa</label>
+      </fieldset>
+      {errors.members && <span className="err">{errors.members.message}</span>}
 
-          <fieldset ref={this.checkbox}>
-            <p className="form-title">Choose your favorite BLACKPINK members:</p>
+      <fieldset>
+        <input
+          {...register('pets', { required: 'This field is required' })}
+          type="radio"
+          value="absolutely"
+          id="langYes"
+        />
+        <label htmlFor="langYes">Absolutely</label>
+        <input
+          {...register('pets', { required: 'This field is required' })}
+          type="radio"
+          value="of course"
+          id="lang"
+        />
+        <label htmlFor="lang">Of course</label>
+      </fieldset>
+      {errors.pets && <span className="err">{errors.pets.message}</span>}
 
-            <input type="checkbox" id="scales" name="Lisa" />
-            <label htmlFor="scales">Lisa</label>
+      <select
+        {...register('language', {
+          minLength: {
+            value: 2,
+            message: 'Select one option',
+          },
+        })}
+      >
+        <option value="java script">java script</option>
+        <option value="type script">type script</option>
+        <option value="coffee script">coffee script</option>
+      </select>
+      {errors.pets && <span className="err">{errors.language.message}</span>}
 
-            <input type="checkbox" id="h" name="Jisoo" />
-            <label htmlFor="h">Jisoo</label>
-
-            <input type="checkbox" id="horns" name="Jennie" />
-            <label htmlFor="horns">Jennie</label>
-
-            <input type="checkbox" id="hor" name="Rose" />
-            <label htmlFor="hor">Rose</label>
-
-            {this.state.members ? <p className="err">{this.state.members}</p> : null}
-          </fieldset>
-
-          <fieldset>
-            <p className="form-title">Select the best programming language</p>
-            <select ref={this.select} className={this.state.language ? 'err' : ''}>
-              <option value="java script">java script</option>
-              <option value="type script">type script</option>
-              <option value="coffee script">coffee script</option>
-            </select>
-            {this.state.language ? <p className="err">{this.state.language}</p> : null}
-          </fieldset>
-
-          <div>
-            <button className="btn" type="submit">
-              Submit
-            </button>
-          </div>
-        </form>
-      </div>
-    );
-  }
-}
+      <button className="btn" type="submit">
+        Add user
+      </button>
+      {showMessage ? <p>Card was added</p> : null}
+    </form>
+  );
+};
 
 export default AddCardForm;

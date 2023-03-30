@@ -11,7 +11,7 @@ function UserCard(props: User) {
       <div className="card-list">
         <img src={img} alt=" " />
         <p>{`Date of birth: ${date}`}</p>
-        <p>{`Cats are ${pets[0].toUpperCase()} beautiful`}</p>
+        <p>{`Cats are ${pets.toUpperCase()} beautiful`}</p>
         <p>{`My favorite language is ${language.toUpperCase()}`}</p>
         <p>Best girls in the world are:</p>
         {members.map((member: string) => {

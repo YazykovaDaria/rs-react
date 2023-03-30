@@ -18,7 +18,7 @@ export type User = {
   name: string;
   date: string;
   img: string;
-  pets: string[];
+  pets: string;
   language: string;
   members: string[];
 };
