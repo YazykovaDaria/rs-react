@@ -4,15 +4,6 @@ import { useForm } from 'react-hook-form';
 import { User } from 'src/types/card';
 import Input from './Input';
 
-type CardError = {
-  name: string;
-  img: string;
-  date: string;
-  pets: string;
-  members: string;
-  pets: string;
-};
-
 interface IProps {
   addCard: (newCard: User) => void;
 }
@@ -25,6 +16,43 @@ const AddCardForm: React.FC<IProps> = (props) => {
     reset,
     formState: { errors },
   } = useForm({ reValidateMode: 'onSubmit' });
+
+  const simpleInpytProps = [
+    {
+      label: 'Name',
+      name: 'name',
+      register,
+      rules: {
+        required: 'This field is required',
+        minLength: {
+          value: 3,
+          message: 'Min length is 3 chars',
+        },
+      },
+      error: errors.name,
+    },
+    {
+      label: 'Date of birth',
+      name: 'date',
+      register,
+      rules: {
+        required: 'This field is required',
+      },
+      error: errors.date,
+      type: 'date',
+    },
+    {
+      label: 'Avatar',
+      name: 'img',
+      register,
+      rules: {
+        required: 'This field is required',
+      },
+      error: errors.img,
+      type: 'file',
+      accept: '.png, .jpg, .jpeg',
+    },
+  ];
 
   const onSubmit = (data) => {
     setMessage(true);
@@ -39,26 +67,9 @@ const AddCardForm: React.FC<IProps> = (props) => {
     <form onSubmit={handleSubmit(onSubmit)} data-testid="add-card-form" className="form">
       <h2 className="title">Add user</h2>
 
-      <input
-        {...register('name', {
-          required: 'This field is required',
-          minLength: {
-            value: 3,
-            message: 'Min length is 3 chars',
-          },
-        })}
-      />
-      {errors.name && <span className="err">{errors.name.message}</span>}
-
-      <input type="date" {...register('date', { required: true })} />
-      {errors.date && <span className="err">This field is required</span>}
-
-      <input
-        type="file"
-        accept=".png, .jpg, .jpeg"
-        {...register('img', { required: 'This field is required' })}
-      />
-      {errors.img && <span className="err">{errors.img.message}</span>}
+      {simpleInpytProps.map((prop) => {
+        return <Input {...prop} key={prop.name}></Input>;
+      })}
 
       <fieldset>
         <input
@@ -122,7 +133,7 @@ const AddCardForm: React.FC<IProps> = (props) => {
         <option value="type script">type script</option>
         <option value="coffee script">coffee script</option>
       </select>
-      {errors.pets && <span className="err">{errors.language.message}</span>}
+      {errors.language && <span className="err">{errors.language.message}</span>}
 
       <button className="btn" type="submit">
         Add user
