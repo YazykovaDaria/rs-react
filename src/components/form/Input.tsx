@@ -40,7 +40,7 @@ const Input: React.FC<InputProps> = ({
   return (
     <>
       <label htmlFor={name}>{label}</label>
-      <input type={type} {...register(name, rules)} accept={accept} />
+      <input type={type} {...register(name, rules)} accept={accept} id={name} />
       {error && <span className="err">{String(error.message)}</span>}
     </>
   );

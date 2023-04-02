@@ -8,7 +8,7 @@ describe('UserCard component', () => {
     name: 'John Doe',
     date: '1990-01-01',
     img: 'https://example.com/avatar.jpg',
-    pets: ['cats'],
+    pets: 'cats',
     language: 'JavaScript',
     members: ['Alice', 'Bob', 'Charlie'],
   };
@@ -20,7 +20,7 @@ describe('UserCard component', () => {
     expect(screen.getByAltText('')).toHaveAttribute('src', testUser.img);
     expect(screen.getByText(`Date of birth: ${testUser.date}`)).toBeInTheDocument();
     expect(
-      screen.getByText(`Cats are ${testUser.pets[0].toUpperCase()} beautiful`)
+      screen.getByText(`Cats are ${testUser.pets.toUpperCase()} beautiful`)
     ).toBeInTheDocument();
     expect(
       screen.getByText(`My favorite language is ${testUser.language.toUpperCase()}`)
