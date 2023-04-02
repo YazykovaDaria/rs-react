@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import './style.css';
-import { useForm } from 'react-hook-form';
+import { useForm, SubmitHandler, FieldValues } from 'react-hook-form';
 import { User } from 'src/types/card';
 import Input from './Input';
+import ChoiseInputs from './ChoiseInputs';
 
 interface IProps {
   addCard: (newCard: User) => void;
@@ -17,7 +18,7 @@ const AddCardForm: React.FC<IProps> = (props) => {
     formState: { errors },
   } = useForm({ reValidateMode: 'onSubmit' });
 
-  const simpleInpytProps = [
+  const simpleInputProps = [
     {
       label: 'Name',
       name: 'name',
@@ -54,91 +55,72 @@ const AddCardForm: React.FC<IProps> = (props) => {
     },
   ];
 
-  const onSubmit = (data) => {
+  const choiseInputProps = [
+    {
+      label: 'Choise your favorite BLACKPINK members:',
+      name: 'members',
+      register,
+      rules: {
+        required: 'This field is required',
+      },
+      error: errors.members,
+      type: 'checkbox',
+      values: ['Jennie', 'Jisoo', 'Rose', 'Lisa'],
+    },
+    {
+      label: 'Are cats beautiful?',
+      name: 'pets',
+      register,
+      rules: {
+        required: 'This field is required',
+      },
+      error: errors.pets,
+      type: 'radio',
+      values: ['Absolutely', 'Of course'],
+    },
+  ];
+
+  const onSubmit: SubmitHandler<FieldValues> = (data) => {
     setMessage(true);
     const img = URL.createObjectURL(data.img[0]);
     const newCard = { ...data, img };
     props.addCard(newCard);
     reset();
-    setTimeout(() => setMessage(false), 8000);
+    setTimeout(() => setMessage(false), 10000);
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} data-testid="add-card-form" className="form">
       <h2 className="title">Add user</h2>
 
-      {simpleInpytProps.map((prop) => {
+      {simpleInputProps.map((prop) => {
         return <Input {...prop} key={prop.name}></Input>;
       })}
 
-      <fieldset>
-        <input
-          {...register('members', { required: 'This field is required' })}
-          id="jiso"
-          type="checkbox"
-          value="Jisoo"
-        />
-        <label htmlFor="jiso">Jisoo</label>
-        <input
-          {...register('members', { required: 'This field is required' })}
-          type="checkbox"
-          value="Jennie"
-          id="jennie"
-        />
-        <label htmlFor="jennie">Jennie</label>
-        <input
-          {...register('members', { required: 'This field is required' })}
-          type="checkbox"
-          value="Rose"
-          id="rose"
-        />
-        <label htmlFor="rose">Rose</label>
-        <input
-          {...register('members', { required: 'This field is required' })}
-          type="checkbox"
-          value="Lisa"
-          id="lisa"
-        />
-        <label htmlFor="lisa">Lisa</label>
-      </fieldset>
-      {errors.members && <span className="err">{errors.members.message}</span>}
+      {choiseInputProps.map((prop) => (
+        <ChoiseInputs {...prop} key={prop.name}></ChoiseInputs>
+      ))}
 
-      <fieldset>
-        <input
-          {...register('pets', { required: 'This field is required' })}
-          type="radio"
-          value="absolutely"
-          id="langYes"
-        />
-        <label htmlFor="langYes">Absolutely</label>
-        <input
-          {...register('pets', { required: 'This field is required' })}
-          type="radio"
-          value="of course"
-          id="lang"
-        />
-        <label htmlFor="lang">Of course</label>
-      </fieldset>
-      {errors.pets && <span className="err">{errors.pets.message}</span>}
-
-      <select
-        {...register('language', {
-          minLength: {
-            value: 2,
-            message: 'Select one option',
-          },
-        })}
-      >
-        <option value="java script">java script</option>
-        <option value="type script">type script</option>
-        <option value="coffee script">coffee script</option>
-      </select>
-      {errors.language && <span className="err">{errors.language.message}</span>}
-
+      <div className="form">
+        <p>Select your favorite programming language:</p>
+        <select
+          {...register('language', {
+            minLength: {
+              value: 2,
+              message: 'Select one option',
+            },
+          })}
+        >
+          <option value="java script">java script</option>
+          <option value="type script">type script</option>
+          <option value="coffee script">coffee script</option>
+        </select>
+        {errors.language && <span className="err">{String(errors.language.message)}</span>}
+      </div>
       <button className="btn" type="submit">
         Add user
       </button>
-      {showMessage ? <p>Card was added</p> : null}
+      {showMessage ? <p className="message">Card was added</p> : null}
     </form>
   );
 };
