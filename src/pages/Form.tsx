@@ -1,41 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './style.css';
 import AddCardForm from 'src/components/form/AddCardForm';
 import UserCard from 'src/components/cards/UserCard';
 import { User } from 'src/types/card';
 import EmptyProps from 'src/types/props';
 
-interface IState {
-  cards: User[];
-}
+const FormPage: React.FC<EmptyProps> = () => {
+  const [cards, setCards] = useState<User[]>([]);
 
-class FormPage extends React.Component<EmptyProps, IState> {
-  constructor(props: EmptyProps) {
-    super(props);
-
-    this.state = {
-      cards: [],
-    };
-  }
-
-  addCard = (newCard: User): void => {
-    this.setState((prevState) => ({
-      cards: [...prevState.cards, newCard],
-    }));
+  const addCard = (newCard: User): void => {
+    setCards([...cards, newCard]);
   };
 
-  render(): React.ReactNode {
-    return (
-      <div className="wrapper">
-        <AddCardForm addCard={this.addCard}></AddCardForm>
-        <div className="flex-wrap" data-testid="user-card">
-          {this.state.cards.map((card: User) => {
-            return <UserCard {...card} key={Date.now()}></UserCard>;
-          })}
-        </div>
+  return (
+    <div className="wrapper">
+      <AddCardForm addCard={addCard}></AddCardForm>
+      <div className="flex-wrap" data-testid="user-card">
+        {cards.map((card: User) => {
+          return <UserCard {...card} key={Date.now()}></UserCard>;
+        })}
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 export default FormPage;

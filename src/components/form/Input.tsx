@@ -1,20 +1,49 @@
 import React from 'react';
 import './style.css';
+import {
+  RegisterOptions,
+  UseFormRegister,
+  FieldError,
+  FieldValues,
+  FieldErrors,
+} from 'react-hook-form';
 
-type Props = {
-  type: string;
+export type InputProps = {
   label: string;
-  error: string;
+  name: string;
+  type?: string;
+  register: UseFormRegister<FieldValues>;
+  rules?: RegisterOptions;
+  error?: FieldError | FieldErrors;
+  value?: string;
+  accept?: string;
 };
 
-const Input = React.forwardRef(
-  ({ type, label, error }: Props, ref: React.Ref<HTMLInputElement>) => (
-    <div className="form">
-      <label>{label}</label>
-      <input type={type} ref={ref} className={error ? 'err' : ''} />
-      {error ? <p className="err">{error}</p> : null}
-    </div>
-  )
-);
+const Input: React.FC<InputProps> = ({
+  label,
+  name,
+  type = 'text',
+  accept = '',
+  register,
+  rules,
+  error,
+  value,
+}) => {
+  if (type === 'checkbox' || type === 'radio') {
+    return (
+      <>
+        <input type={type} {...register(name, rules)} value={value} id={name} />
+        <label htmlFor={name}>{value}</label>
+      </>
+    );
+  }
+  return (
+    <>
+      <label htmlFor={name}>{label}</label>
+      <input type={type} {...register(name, rules)} accept={accept} id={name} />
+      {error && <span className="err">{String(error.message)}</span>}
+    </>
+  );
+};
 
 export default Input;

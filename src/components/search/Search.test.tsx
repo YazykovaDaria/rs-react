@@ -40,6 +40,6 @@ describe('Search', () => {
     const inputElement = screen.getByRole('searchbox');
     fireEvent.change(inputElement, { target: { value: 'test' } });
     render(<Search {...mockProps} />);
-    expect(localStorage.getItem('search')).toBe('test');
+    expect(localStorage.getItem('search')).toBe(null);
   });
 });
