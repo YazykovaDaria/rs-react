@@ -1,12 +1,12 @@
 import React from 'react';
-import Card from 'src/types.ts/card';
+//import Card from 'src/types.ts/card';
 import CardItem from './Card';
 
-type Props = {
-  cards: Card[];
-};
+// type Props = {
+//   cards: Card[];
+// };
 
-function Cards({ cards }: Props) {
+function Cards({ cards }) {
   return (
     <>
       <p className="title">Products</p>

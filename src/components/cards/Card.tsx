@@ -1,22 +1,20 @@
 import React from 'react';
 import './style.css';
-import Card from 'src/types.ts/card';
+// import Card from 'src/types.ts/card';
 
-type Props = {
-  card: Card;
-};
+// type Props = {
+//   card: Card;
+// };
 
-function CardItem({ card }: Props) {
-  const { title, thumbnail, description, price, brand, category } = card;
+function CardItem({ card }) {
+  const { image, name, status, species } = card;
   return (
     <div className="card" data-testid="card">
-      <p className="title">{title}</p>
+      <p className="title">{name}</p>
       <div className="card-list">
-        <img src={thumbnail} alt={title} />
-        <p>{`Brand: ${brand}`}</p>
-        <p>{`Category: ${category}`}</p>
-        <p>{`Price: ${price} $`}</p>
-        <p>{description}</p>
+        <img src={image} alt={name} />
+        <p>{`Status: ${status}`}</p>
+        <p>{`Species: ${species}`}</p>
       </div>
     </div>
   );
