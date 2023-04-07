@@ -8,5 +8,5 @@ display: flex;
 justify-content: center;
 align-items: center;
 z-index: 10;
-background: rgba(20, 20, 20, 0.9)
+background: rgb(32, 31, 31);
 }

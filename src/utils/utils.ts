@@ -7,8 +7,9 @@ function getSavedSearchVal(): string {
 
 export default getSavedSearchVal;
 
+const baseUrl = 'https://rickandmortyapi.com/api/character';
+
 export const getCharacters = async (url = ''): Promise<Card[]> => {
-  const baseUrl = 'https://rickandmortyapi.com/api/character';
   try {
     const response = await fetch(`${baseUrl}${url}`);
     const data = await response.json();
@@ -19,5 +20,15 @@ export const getCharacters = async (url = ''): Promise<Card[]> => {
   } catch (err) {
     console.log(err);
     return [];
+  }
+};
+
+export const getCharacter = async (url = ''): Promise<Card | undefined> => {
+  try {
+    const response = await fetch(`${baseUrl}${url}`);
+    const data = await response.json();
+    return data;
+  } catch (err) {
+    console.log(err);
   }
 };
