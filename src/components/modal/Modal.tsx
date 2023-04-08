@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './style.css';
 
 type ModalProps = {
@@ -8,6 +8,10 @@ type ModalProps = {
 };
 
 const Modal = ({ onClose, isOpen, children }: ModalProps) => {
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? 'hidden' : 'unset';
+  }, [isOpen]);
+
   const closeModal = (e: React.MouseEvent) => {
     const target = e.target as HTMLElement;
     if (target.matches('.close')) {
