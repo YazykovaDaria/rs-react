@@ -1,22 +1,27 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
+import { vi } from 'vitest';
 import CardItem from './Card';
 import data from 'src/tests/cardsData';
+import Card from 'src/types/card';
 
-describe('Test Card component', () => {
-  const card = data[0];
+describe('CardItem', () => {
+  const card: Card = data[0];
 
-  it('renders title, image, description, brand, category and price correctly', () => {
-    render(<CardItem card={card} />);
-
-    expect(screen.getByText('iPhone 9')).toBeInTheDocument();
-    expect(screen.getByAltText('iPhone 9')).toHaveAttribute(
+  it('renders card name and image', () => {
+    const { getByTestId } = render(<CardItem card={card} showCardInfo={() => {}} />);
+    expect(getByTestId('card')).toHaveTextContent('Morty Smith');
+    expect(getByTestId('card').querySelector('img')).toHaveAttribute(
       'src',
-      'https://i.dummyjson.com/data/products/1/thumbnail.jpg'
+      'https://rickandmortyapi.com/api/character/avatar/2.jpeg'
     );
-    expect(screen.getByText('An apple mobile which is nothing like apple')).toBeInTheDocument();
-    expect(screen.getByText('Brand: Apple')).toBeInTheDocument();
-    expect(screen.getByText('Category: smartphones')).toBeInTheDocument();
-    expect(screen.getByText('Price: 549 $')).toBeInTheDocument();
+  });
+
+  it('calls showCardInfo on button click', () => {
+    const showCardInfoMock = vi.fn();
+    const { getByTestId } = render(<CardItem card={card} showCardInfo={showCardInfoMock} />);
+    fireEvent.click(getByTestId('card').querySelector('button')!);
+    expect(showCardInfoMock).toHaveBeenCalledTimes(1);
+    expect(showCardInfoMock).toHaveBeenCalledWith(2);
   });
 });
