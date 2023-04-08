@@ -18,7 +18,12 @@ const Modal = ({ onClose, isOpen, children }: ModalProps) => {
   if (isOpen)
     return (
       <div className="modal close" onClick={closeModal}>
-        <div>{children}</div>
+        <div className="modal__container">
+          <div className="modal__close" onClick={onClose}>
+            X
+          </div>
+          <div>{children}</div>
+        </div>
       </div>
     );
   return null;

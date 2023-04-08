@@ -10,3 +10,29 @@ align-items: center;
 z-index: 10;
 background: rgb(32, 31, 31);
 }
+
+.modal__container {
+  position: relative;
+}
+
+.modal__close {
+  position: absolute;
+top: -40px;
+right: -10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
+  border: solid 2px red;
+  border-radius: 100%;
+  font-size: 1rem;
+  font-weight: 700;
+  color: white;
+}
+
+.modal__close:hover {
+  cursor: pointer;
+  background-color: red;
+  transition: 0.3s;
+}
