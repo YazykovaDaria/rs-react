@@ -3,6 +3,7 @@ import Card from 'src/types/card';
 import CardItem from './Card';
 import { getCharacter } from 'src/utils/utils';
 import DetailCard from './DetailCard';
+import Spiner from '../spinner/Spinner';
 import Modal from '../modal/Modal';
 
 type Props = {
@@ -27,7 +28,7 @@ function Cards({ cards }: Props) {
 
   return (
     <>
-      {isLoading && <p>loading</p>}
+      {isLoading && <Spiner></Spiner>}
       <Modal isOpen={isModal} onClose={() => setModal(false)}>
         <DetailCard card={cardDetail}></DetailCard>
       </Modal>

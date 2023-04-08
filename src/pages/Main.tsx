@@ -4,6 +4,7 @@ import Search from 'src/components/search/Search';
 import getSavedSearchVal from 'src/utils/utils';
 import Cards from 'src/components/cards/Cards';
 import { getCharacters } from 'src/utils/utils';
+import Spiner from 'src/components/spinner/Spinner';
 import Card from 'src/types/card';
 
 function Main() {
@@ -33,7 +34,7 @@ function Main() {
     <div className="wrapper">
       <Search value={getSavedSearchVal()} onSubmit={changeData} />
       <div>
-        {isLoading && <p>Loading</p>}
+        {isLoading && <Spiner></Spiner>}
         {data.length === 0 ? (
           <p>Nothing was found for your request</p>
         ) : (
