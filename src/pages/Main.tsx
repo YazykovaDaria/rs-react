@@ -36,7 +36,7 @@ function Main() {
       <div>
         {isLoading && <Spiner></Spiner>}
         {data.length === 0 ? (
-          <p>Nothing was found for your request</p>
+          <p className="title">Nothing was found for your request</p>
         ) : (
           <Cards cards={data}></Cards>
         )}

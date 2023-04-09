@@ -8,7 +8,7 @@ const mockCards = data;
 describe('Cards', () => {
   it('renders the title', () => {
     render(<Cards cards={mockCards} />);
-    const titleElement = screen.getByText('Products');
+    const titleElement = screen.getByText('Rick and Morty characters');
     expect(titleElement).toBeInTheDocument();
   });
 

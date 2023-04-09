@@ -1,45 +1,37 @@
 import React from 'react';
+import { vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import Search from './Search';
 
-describe('Search', () => {
-  const localStorageMock = (() => {
-    let store: Record<string, string> = {};
-    return {
-      getItem: (key: string) => store[key] || null,
-      setItem: (key: string, value: string) => (store[key] = value.toString()),
-      removeItem: (key: string) => delete store[key],
-      clear: () => (store = {}),
-    };
-  })();
-  Object.defineProperty(window, 'localStorage', {
-    value: localStorageMock,
+describe('Search component', () => {
+  const onSubmit = vi.fn();
+  const value = 'initial value';
+
+  beforeEach(() => {
+    localStorage.clear();
   });
 
-  const mockProps = {
-    value: '',
-  };
-
-  it('renders the input field and search button', () => {
-    render(<Search {...mockProps} />);
-    const inputElement = screen.getByRole('searchbox');
-    expect(inputElement).toBeInTheDocument();
-    const buttonElement = screen.getByRole('button', { name: 'Search' });
-    expect(buttonElement).toBeInTheDocument();
+  it('renders the search bar with initial value', () => {
+    render(<Search value={value} onSubmit={onSubmit} />);
+    expect(screen.getByTestId('search-bar')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Search by names')).toHaveValue(value);
   });
 
-  it('updates the value state when typing in the input field', () => {
-    render(<Search {...mockProps} />);
-    const inputElement = screen.getByRole('searchbox');
-    fireEvent.change(inputElement, { target: { value: 'test' } });
-    expect(inputElement).toHaveValue('test');
+  it('updates the search value when input changes', () => {
+    render(<Search value={value} onSubmit={onSubmit} />);
+    const input = screen.getByPlaceholderText('Search by names');
+    fireEvent.change(input, { target: { value: 'new value' } });
+    expect(input).toHaveValue('new value');
   });
 
-  it('saves the search value to local storage when unmounting', () => {
-    render(<Search {...mockProps} />);
-    const inputElement = screen.getByRole('searchbox');
-    fireEvent.change(inputElement, { target: { value: 'test' } });
-    render(<Search {...mockProps} />);
-    expect(localStorage.getItem('search')).toBe(null);
+  it('submits the search value and saves to local storage', () => {
+    const searchValue = 'search query';
+    render(<Search value={value} onSubmit={onSubmit} />);
+    const form = screen.getByTestId('search-bar');
+    const input = screen.getByPlaceholderText('Search by names');
+    fireEvent.change(input, { target: { value: searchValue } });
+    fireEvent.submit(form);
+    expect(onSubmit).toHaveBeenCalledWith(searchValue);
+    expect(localStorage.getItem('search')).toBe(searchValue);
   });
 });

@@ -27,7 +27,7 @@ function Cards({ cards }: Props) {
   };
 
   return (
-    <>
+    <div data-testid="cards">
       {isLoading && <Spiner></Spiner>}
       <Modal isOpen={isModal} onClose={() => setModal(false)}>
         <DetailCard card={cardDetail}></DetailCard>
@@ -39,7 +39,7 @@ function Cards({ cards }: Props) {
           <CardItem key={card.id} card={card} showCardInfo={showModal} />
         ))}
       </div>
-    </>
+    </div>
   );
 }
 

@@ -10,7 +10,7 @@ const DetailCard = ({ card }: Props) => {
   const { image, name, status, species, gender, location } = card;
 
   return (
-    <div className="card card--detail" data-testid="card">
+    <div className="card card--detail" data-testid="detail-card">
       <p className="title">{name}</p>
       <div className="card-list">
         <img src={image} alt={name} />

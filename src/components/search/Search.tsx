@@ -20,7 +20,7 @@ const Search: React.FC<IProps> = ({ value, onSubmit }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} data-testid="search-bar">
       <input
         type="search"
         value={searchValue}
