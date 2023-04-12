@@ -1,21 +1,45 @@
-import React from 'react';
-import Card from 'src/types.ts/card';
+import React, { useState } from 'react';
+import Card from 'src/types/card';
 import CardItem from './Card';
+import { getCharacter } from 'src/utils/utils';
+import DetailCard from './DetailCard';
+import Spiner from '../spinner/Spinner';
+import Modal from '../modal/Modal';
 
 type Props = {
   cards: Card[];
 };
 
 function Cards({ cards }: Props) {
+  const [isModal, setModal] = useState(false);
+  const [isLoading, setLoading] = useState(false);
+  const [cardDetail, setCardDetail] = useState<Card>(cards[0]);
+
+  const showModal = async (id: number) => {
+    const url = `/${id}`;
+    setLoading(true);
+    const data = await getCharacter(url);
+    if (data) {
+      setCardDetail(data);
+      setLoading(false);
+      setModal(true);
+    }
+  };
+
   return (
-    <>
-      <p className="title">Products</p>
+    <div data-testid="cards">
+      {isLoading && <Spiner></Spiner>}
+      <Modal isOpen={isModal} onClose={() => setModal(false)}>
+        <DetailCard card={cardDetail}></DetailCard>
+      </Modal>
+
+      <p className="title">Rick and Morty characters</p>
       <div className="cards">
         {cards.map((card) => (
-          <CardItem key={card.id} card={card} />
+          <CardItem key={card.id} card={card} showCardInfo={showModal} />
         ))}
       </div>
-    </>
+    </div>
   );
 }
 

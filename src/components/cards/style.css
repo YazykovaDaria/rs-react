@@ -28,6 +28,11 @@
   gap: 0.5rem;
 }
 
+.card--detail {
+  min-width: 400px;
+  background-color: azure;
+}
+
 @media (max-width: 960px) {
   .card {
     width: 40%;
@@ -37,5 +42,9 @@
 @media (max-width: 640px) {
   .card {
     width: 100%;
+  }
+
+  .card--detail {
+   min-width: 60%;
   }
 }
