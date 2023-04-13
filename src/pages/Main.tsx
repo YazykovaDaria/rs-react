@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './style.css';
+import { useSelector, useDispatch } from 'react-redux';
+import { updateCards } from 'src/redux/slices/cards';
 import Search from 'src/components/search/Search';
 import getSavedSearchVal from 'src/utils/utils';
 import Cards from 'src/components/cards/Cards';
@@ -8,7 +10,9 @@ import Spiner from 'src/components/spinner/Spinner';
 import Card from 'src/types/card';
 
 function Main() {
-  const [data, setData] = useState<Card[]>([]);
+  const data = useSelector((state) => state.cards.cards);
+  const dispatch = useDispatch();
+  const updateData = (cards: Card[]) => dispatch(updateCards({ cards }));
   const [isLoading, setLoading] = useState(false);
   const savedSearchVal = getSavedSearchVal();
 
@@ -16,8 +20,8 @@ function Main() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getCharacters(getSearchUrl(savedSearchVal));
-      setData(data);
+      const cards = await getCharacters(getSearchUrl(savedSearchVal));
+      updateData(cards);
     };
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -25,10 +29,12 @@ function Main() {
 
   const changeData = async (url: string) => {
     setLoading(true);
-    const data = await getCharacters(getSearchUrl(url));
+    const cards = await getCharacters(getSearchUrl(url));
     setLoading(false);
-    setData(data);
+    updateData(cards);
   };
+
+  console.log(data);
 
   return (
     <div className="wrapper">
