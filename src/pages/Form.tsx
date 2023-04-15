@@ -1,23 +1,20 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './style.css';
+import { useSelector } from 'react-redux';
 import AddCardForm from 'src/components/form/AddCardForm';
 import UserCard from 'src/components/cards/UserCard';
 import { User } from 'src/types/card';
-import EmptyProps from 'src/types/props';
 
-const FormPage: React.FC<EmptyProps> = () => {
-  const [cards, setCards] = useState<User[]>([]);
-
-  const addCard = (newCard: User): void => {
-    setCards([...cards, newCard]);
-  };
+const FormPage = () => {
+  const { userCards } = useSelector((state) => state.userCards);
 
   return (
     <div className="wrapper">
-      <AddCardForm addCard={addCard}></AddCardForm>
+      <AddCardForm></AddCardForm>
       <div className="flex-wrap" data-testid="user-card">
-        {cards.map((card: User) => {
-          return <UserCard {...card} key={Date.now()}></UserCard>;
+        {userCards.map((card: User) => {
+          const key = Date.now();
+          return <UserCard {...card} key={key}></UserCard>;
         })}
       </div>
     </div>
