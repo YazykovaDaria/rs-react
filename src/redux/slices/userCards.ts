@@ -1,16 +1,20 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { User } from 'src/types/card';
 
-const userCards: User[] = [];
+type UserCardsState = {
+  userCards: User[];
+};
+
+const initialState: UserCardsState = {
+  userCards: [],
+};
 
 const userCardsSlice = createSlice({
   name: 'userCards',
-  initialState: {
-    userCards,
-  },
+  initialState,
   reducers: {
-    addUserCard(state, action) {
-      state.userCards.push(action.payload.card);
+    addUserCard(state, action: PayloadAction<User>) {
+      state.userCards.push(action.payload);
     },
   },
 });

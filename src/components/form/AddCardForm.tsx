@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import './style.css';
 import { useForm, SubmitHandler, FieldValues } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
+import { useAppDispatch } from 'src/hooks/reduxHook';
 import { addUserCard } from 'src/redux/slices/userCards';
 import Input from './Input';
 import ChoiseInputs from './ChoiseInputs';
 
 const AddCardForm = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [showMessage, setMessage] = useState(false);
   const {
     register,
@@ -82,7 +82,7 @@ const AddCardForm = () => {
     setMessage(true);
     const img = URL.createObjectURL(data.img[0]);
     const newCard = { ...data, img };
-    dispatch(addUserCard({ card: newCard }));
+    dispatch(addUserCard(newCard));
     reset();
     setTimeout(() => setMessage(false), 10000);
   };

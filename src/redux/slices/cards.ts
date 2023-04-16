@@ -1,40 +1,40 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction, AnyAction } from '@reduxjs/toolkit';
 import Card from 'src/types/card';
 
-const cards: Card[] = [];
+type CardsState = {
+  cards: Card[];
+  isLoading: boolean;
+  error: string;
+  search: string;
+};
 
-export const fetchCards = createAsyncThunk(
+export const fetchCards = createAsyncThunk<Card[], string, { rejectValue: string }>(
   'cards/fetchCards',
   async function (url, { rejectWithValue }) {
-    try {
-      const baseUrl = 'https://rickandmortyapi.com/api/character';
-      const response = await fetch(`${baseUrl}${url}`);
-      const data = await response.json();
-      if (data.error) {
-        throw new Error('Nothing was found for your request');
-      }
-
-      return data.results;
-    } catch (error) {
-      return rejectWithValue(error.message);
+    const baseUrl = 'https://rickandmortyapi.com/api/character';
+    const response = await fetch(`${baseUrl}${url}`);
+    const data = await response.json();
+    if (data.error) {
+      return rejectWithValue('Nothing was found for your request');
     }
+
+    return data.results;
   }
 );
 
+const initialState: CardsState = {
+  cards: [],
+  isLoading: false,
+  error: '',
+  search: '',
+};
+
 const cardsSlice = createSlice({
   name: 'cards',
-  initialState: {
-    cards,
-    isLoading: false,
-    error: '',
-    search: '',
-  },
+  initialState,
   reducers: {
-    updateCards(state, action) {
-      state.cards = action.payload.cards;
-    },
-    saveSearch(state, action) {
-      state.search = action.payload.search;
+    saveSearch(state, action: PayloadAction<string>) {
+      state.search = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -48,13 +48,16 @@ const cardsSlice = createSlice({
       state.isLoading = true;
     });
 
-    builder.addCase(fetchCards.rejected, (state, action) => {
-      state.isLoading = false;
+    builder.addMatcher(isError, (state, action: PayloadAction<string>) => {
       state.error = action.payload;
     });
   },
 });
 
-export const { updateCards, saveSearch } = cardsSlice.actions;
+function isError(action: AnyAction) {
+  return action.type.endsWith('rejected');
+}
+
+export const { saveSearch } = cardsSlice.actions;
 
 export default cardsSlice.reducer;

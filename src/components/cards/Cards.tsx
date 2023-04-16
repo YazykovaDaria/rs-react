@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useAppDispatch, useAppSelector } from 'src/hooks/reduxHook';
 import { fetchCards } from 'src/redux/slices/cards';
 import Card from 'src/types/card';
 import CardItem from './Card';
@@ -8,8 +8,8 @@ import Spiner from '../spinner/Spinner';
 import Modal from '../modal/Modal';
 
 function Cards() {
-  const dispatch = useDispatch();
-  const { cards, isLoading, error, search } = useSelector((state) => state.cards);
+  const dispatch = useAppDispatch();
+  const { cards, isLoading, error, search } = useAppSelector((state) => state.cards);
 
   const getSearchUrl = (url: string) => `/?name=${url}`;
 
@@ -18,11 +18,12 @@ function Cards() {
       dispatch(fetchCards(getSearchUrl(search)));
     };
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
   const [isModal, setModal] = useState(false);
 
-  const [cardDetail, setCardDetail] = useState<Card>(cards[0]);
+  const [cardDetail, setCardDetail] = useState<Card | null>(null);
 
   const showModal = (id: number) => {
     const card = cards.find((card) => card.id === id);
@@ -40,7 +41,7 @@ function Cards() {
     <div data-testid="cards">
       {isLoading && <Spiner></Spiner>}
       <Modal isOpen={isModal} onClose={() => setModal(false)}>
-        <DetailCard card={cardDetail}></DetailCard>
+        {cardDetail && <DetailCard card={cardDetail}></DetailCard>}
       </Modal>
 
       <p className="title">Rick and Morty characters</p>

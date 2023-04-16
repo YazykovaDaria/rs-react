@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import './style.css';
-import { useSelector, useDispatch } from 'react-redux';
+import { useAppDispatch, useAppSelector } from 'src/hooks/reduxHook';
 import { fetchCards, saveSearch } from 'src/redux/slices/cards';
 
 const Search = () => {
-  const { search } = useSelector((state) => state.cards);
+  const { search } = useAppSelector((state) => state.cards);
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [searchValue, setSearchValue] = useState(search);
 
   const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -15,7 +15,7 @@ const Search = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(saveSearch({ search: searchValue }));
+    dispatch(saveSearch(searchValue));
     dispatch(fetchCards(`/?name=${searchValue}`));
   };
 
