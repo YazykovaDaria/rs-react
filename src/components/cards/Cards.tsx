@@ -18,8 +18,7 @@ function Cards() {
       dispatch(fetchCards(getSearchUrl(search)));
     };
     fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch]);
+  }, [search, dispatch]);
 
   const [isModal, setModal] = useState(false);
 
@@ -44,7 +43,7 @@ function Cards() {
         {cardDetail && <DetailCard card={cardDetail}></DetailCard>}
       </Modal>
 
-      <p className="title">Rick and Morty characters</p>
+      <h2 className="title">Rick and Morty characters</h2>
       <div className="cards">
         {cards.map((card) => (
           <CardItem key={card.id} card={card} showCardInfo={showModal} />

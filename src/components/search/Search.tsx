@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './style.css';
 import { useAppDispatch, useAppSelector } from 'src/hooks/reduxHook';
-import { fetchCards, saveSearch } from 'src/redux/slices/cards';
+import { saveSearch } from 'src/redux/slices/cards';
 
 const Search = () => {
   const { search } = useAppSelector((state) => state.cards);
@@ -16,7 +16,6 @@ const Search = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     dispatch(saveSearch(searchValue));
-    dispatch(fetchCards(`/?name=${searchValue}`));
   };
 
   return (

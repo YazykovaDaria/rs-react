@@ -1,37 +1,25 @@
 import React from 'react';
-import { vi } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { describe, it } from 'vitest';
+import { render, screen } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
+
 import Search from './Search';
+import store from 'src/redux/store';
+import { saveSearch } from 'src/redux/slices/cards';
 
-describe('Search component', () => {
-  const onSubmit = vi.fn();
-  const value = 'initial value';
-
-  beforeEach(() => {
-    localStorage.clear();
-  });
-
-  it('renders the search bar with initial value', () => {
-    render(<Search value={value} onSubmit={onSubmit} />);
-    expect(screen.getByTestId('search-bar')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Search by names')).toHaveValue(value);
-  });
-
-  it('updates the search value when input changes', () => {
-    render(<Search value={value} onSubmit={onSubmit} />);
-    const input = screen.getByPlaceholderText('Search by names');
-    fireEvent.change(input, { target: { value: 'new value' } });
-    expect(input).toHaveValue('new value');
-  });
-
-  it('submits the search value and saves to local storage', () => {
-    const searchValue = 'search query';
-    render(<Search value={value} onSubmit={onSubmit} />);
-    const form = screen.getByTestId('search-bar');
-    const input = screen.getByPlaceholderText('Search by names');
-    fireEvent.change(input, { target: { value: searchValue } });
-    fireEvent.submit(form);
-    expect(onSubmit).toHaveBeenCalledWith(searchValue);
-    expect(localStorage.getItem('search')).toBe(searchValue);
+describe('SearchBar', () => {
+  const dispatch = store.dispatch;
+  it('SearchBar loads value from Redux store', async () => {
+    dispatch(saveSearch('rick'));
+    render(
+      <MemoryRouter>
+        <Provider store={store}>
+          <Search />
+        </Provider>
+      </MemoryRouter>
+    );
+    const searchText = screen.getByDisplayValue('rick');
+    expect(searchText).toBeInTheDocument();
   });
 });
