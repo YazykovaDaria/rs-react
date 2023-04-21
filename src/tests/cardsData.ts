@@ -1,6 +1,6 @@
 import Card from 'src/types/card';
 
-const data: Card[] = [
+const cardsData: Card[] = [
   {
     id: 2,
     name: 'Morty Smith',
@@ -46,4 +46,4 @@ const data: Card[] = [
     created: '2017-12-29T18:51:29.693Z',
   },
 ];
-export default data;
+export default cardsData;

@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
 import './style.css';
 import { useForm, SubmitHandler, FieldValues } from 'react-hook-form';
-import { User } from 'src/types/card';
+import { useAppDispatch } from 'src/hooks/reduxHook';
+import { addUserCard } from 'src/redux/slices/userCards';
 import Input from './Input';
 import ChoiseInputs from './ChoiseInputs';
 
-interface IProps {
-  addCard: (newCard: User) => void;
-}
-
-const AddCardForm: React.FC<IProps> = (props) => {
+const AddCardForm = () => {
+  const dispatch = useAppDispatch();
   const [showMessage, setMessage] = useState(false);
   const {
     register,
@@ -84,7 +82,7 @@ const AddCardForm: React.FC<IProps> = (props) => {
     setMessage(true);
     const img = URL.createObjectURL(data.img[0]);
     const newCard = { ...data, img };
-    props.addCard(newCard);
+    dispatch(addUserCard(newCard));
     reset();
     setTimeout(() => setMessage(false), 10000);
   };

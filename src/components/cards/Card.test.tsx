@@ -2,11 +2,11 @@ import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import { vi } from 'vitest';
 import CardItem from './Card';
-import data from 'src/tests/cardsData';
+import cardsData from 'src/tests/cardsData';
 import Card from 'src/types/card';
 
 describe('CardItem', () => {
-  const card: Card = data[0];
+  const card: Card = cardsData[0];
 
   it('renders card name and image', () => {
     const { getByTestId } = render(<CardItem card={card} showCardInfo={() => {}} />);

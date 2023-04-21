@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import './style.css';
+import { useAppDispatch, useAppSelector } from 'src/hooks/reduxHook';
+import { saveSearch } from 'src/redux/slices/cards';
 
-interface IProps {
-  value: string;
-  onSubmit: (url: string) => void;
-}
+const Search = () => {
+  const { search } = useAppSelector((state) => state.cards);
 
-const Search: React.FC<IProps> = ({ value, onSubmit }) => {
-  const [searchValue, setSearchValue] = useState(value);
+  const dispatch = useAppDispatch();
+  const [searchValue, setSearchValue] = useState(search);
 
   const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.currentTarget.value);
@@ -15,8 +15,7 @@ const Search: React.FC<IProps> = ({ value, onSubmit }) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    localStorage.setItem('search', searchValue);
-    onSubmit(searchValue);
+    dispatch(saveSearch(searchValue));
   };
 
   return (
