@@ -1,6 +1,4 @@
 import React from 'react';
-import 'reset-css';
-import 'src/App.css';
 import { BrowserRouter } from 'react-router-dom';
 import Router from './Router';
 

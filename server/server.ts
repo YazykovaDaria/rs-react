@@ -5,7 +5,6 @@ import compression from 'compression';
 import { fileURLToPath } from 'node:url';
 import { ViteDevServer, createServer as createViteServer } from 'vite';
 
-//fix css
 const root = process.cwd();
 const isProd = process.env.NODE_ENV === 'production';
 const dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -28,11 +27,6 @@ async function createServer() {
       root,
       server: {
         middlewareMode: true,
-        watch: {
-          usePolling: true,
-          interval: 100,
-        },
-        hmr: true,
       },
       appType: 'custom',
     });
@@ -41,39 +35,58 @@ async function createServer() {
   }
 
   app.use('*', async (req, res) => {
-    try {
-      // const url = req.originalUrl;
+    const url = req.originalUrl;
 
-      // let template;
-      if (isProd) {
-        const render = (await import(`${root}/dist/server/entry-server.js`!)).render;
-        const script =
-          '/assets/' +
-          fs
-            .readdirSync(resolve(`${root}/dist/client/assets`))
-            .filter((fn: string) => fn.endsWith('js'));
-        const style =
-          '/assets/' +
-          fs
-            .readdirSync(resolve(`${root}/dist/client/assets`))
-            .filter((fn: string) => fn.includes('css'));
-        const assets = { style, script };
-        render(req, res, assets);
-      } else {
-        // template = fs.readFileSync(`${root}/index.html`, 'utf-8')
-        // template = await viteServer.transformIndexHtml(url, template)
-        const { render } = await viteServer.ssrLoadModule(`src/entry-server.tsx`);
-        const assets = { script: 'src/entry-client.tsx' };
-        render(req, res, assets);
+    try {
+      const pathToIndex = isProd ? `dist/client/index.html` : `${root}/index.html`;
+      const index = fs.readFileSync(resolve(pathToIndex), 'utf8');
+      const template = isProd ? index : await viteServer.transformIndexHtml(url, index);
+
+      const { render } = isProd
+        ? await import(`${root}/dist/server/entry-server.js`!)
+        : await viteServer.ssrLoadModule(`${root}/src/entry-server.tsx`);
+
+      const htmlParts = template.split('<!--app-->');
+
+      try {
+        res.write(htmlParts[0]);
+        const { stream, injectPreload } = await render(req, {
+          onShellReady() {
+            stream.pipe(res);
+          },
+          onShellError(err: Error) {
+            console.error(err);
+          },
+          onAllReady() {
+            const withPreload = htmlParts[1].replace('<!--preload-->', injectPreload());
+            res.write(withPreload);
+            res.end();
+          },
+          onError(err: Error) {
+            console.error(err);
+          },
+        });
+      } catch (e) {
+        if (e instanceof Response && e.status >= 300 && e.status <= 399) {
+          return res.redirect(e.status, e.headers.get('Location')!);
+        }
+        throw e;
       }
-    } catch (e) {
-      const err = e as Error;
-      !isProd && viteServer.ssrFixStacktrace(err);
-      console.log(err.stack);
-      res.status(500).end(err.stack);
+    } catch (error) {
+      if (error instanceof Error) {
+        if (!isProd) {
+          viteServer.ssrFixStacktrace(error);
+        }
+
+        console.log(error.stack);
+        res.status(500).end(error.stack);
+
+        return;
+      }
+
+      console.log(error);
     }
   });
-
   return app;
 }
 

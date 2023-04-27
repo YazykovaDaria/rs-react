@@ -1,4 +1,6 @@
 import React from 'react';
+import 'reset-css';
+import './App.css';
 import { Routes, Route } from 'react-router-dom';
 import NotFound from 'src/pages/NotFound';
 import AboutUs from 'src/pages/AboutUs';
