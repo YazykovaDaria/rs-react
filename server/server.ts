@@ -1,32 +1,78 @@
-// import type { Request, Response, NextFunction } from 'express';
-// import fs from 'fs/promises';
-// import path from 'path';
+import fs from 'fs/promises';
+import path from 'path';
 import express from 'express';
-// import compression from 'compression';
-// import serveStatic from 'serve-static';
-// import { createServer as createViteServer } from 'vite';
+import compression from 'compression';
+import { fileURLToPath } from 'url';
+import { ViteDevServer, createServer as createViteServer } from 'vite';
 
-// const isTest = process.env.NODE_ENV === 'test' || !!process.env.VITE_TEST_BUILD;
+//fix css
+const root = process.cwd();
+const isProd = process.env.NODE_ENV === 'production';
+const dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// const resolve = (p: string) => path.resolve(__dirname, p);
+const resolve = (p: string) => path.resolve(dirname, p);
 
-async function createServer(isProd = process.env.NODE_ENV === 'production') {
+async function createServer() {
   const app = express();
-  // const vite = await createViteServer({
-  //   server: { middlewareMode: true },
-  //   appType: 'custom',
-  //   logLevel: isTest ? 'error' : 'info',
-  // });
+  app.use(compression());
 
-  app.get('/', function (request, response) {
-    // отправляем ответ
-    response.send('<h2>Привет Express!</h2>');
+  let viteServer: ViteDevServer;
+  if (isProd) {
+    app.use(
+      (await import('serve-static')).default(resolve('dist/client'), {
+        index: false,
+      })
+    );
+  } else {
+    viteServer = await createViteServer({
+      root,
+      server: { middlewareMode: true },
+      appType: 'custom',
+    });
+
+    app.use(viteServer.middlewares);
+  }
+
+  app.use('*', async (req, res) => {
+    try {
+      // const pathToFile = isProd ? `dist/client/index.html` : `${root}/index.html`;
+      // const index = fs.readFileSync(resolve(pathToFile), 'utf8');
+
+      if (isProd) {
+        const render = (await import(`${root}/dist/server/entry-server.js`!)).render;
+        const script =
+          '/assets/' +
+          fs
+            .readdirSync(resolve(`${root}/dist/client/assets`))
+            .filter((fn: string) => fn.endsWith('js'));
+        const style =
+          '/assets/' +
+          fs
+            .readdirSync(resolve(`${root}/dist/client/assets`))
+            .filter((fn: string) => fn.includes('css'));
+        const assets = { style, script };
+        render(req, res, assets);
+      } else {
+        const { render } = await viteServer.ssrLoadModule(`src/entry-server.tsx`);
+        console.log(render);
+
+        const assets = { script: 'src/entry-client.tsx' };
+        render(req, res, assets);
+      }
+    } catch (e) {
+      const err = e as Error;
+      !isProd && viteServer.ssrFixStacktrace(err);
+      console.log(err.stack);
+      res.status(500).end(err.stack);
+    }
   });
 
+  return app;
+}
+
+createServer().then((app) => {
   const port = process.env.PORT || 7456;
   app.listen(Number(port), '0.0.0.0', () => {
     console.log(`App is listening on http://localhost:${port}`);
   });
-}
-
-createServer();
+});
