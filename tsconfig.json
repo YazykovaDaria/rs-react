@@ -21,6 +21,6 @@
   "include": [
     ".eslintrc.cjs",
     "vite.config.ts",
-    "src"],
+    "src", "src/redux/slices/.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
