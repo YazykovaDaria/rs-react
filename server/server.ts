@@ -1,8 +1,8 @@
-import fs from 'fs/promises';
+import fs from 'fs';
 import path from 'path';
 import express from 'express';
 import compression from 'compression';
-import { fileURLToPath } from 'url';
+import { fileURLToPath } from 'node:url';
 import { ViteDevServer, createServer as createViteServer } from 'vite';
 
 //fix css
@@ -26,7 +26,14 @@ async function createServer() {
   } else {
     viteServer = await createViteServer({
       root,
-      server: { middlewareMode: true },
+      server: {
+        middlewareMode: true,
+        watch: {
+          usePolling: true,
+          interval: 100,
+        },
+        hmr: true,
+      },
       appType: 'custom',
     });
 
@@ -35,9 +42,9 @@ async function createServer() {
 
   app.use('*', async (req, res) => {
     try {
-      // const pathToFile = isProd ? `dist/client/index.html` : `${root}/index.html`;
-      // const index = fs.readFileSync(resolve(pathToFile), 'utf8');
+      // const url = req.originalUrl;
 
+      // let template;
       if (isProd) {
         const render = (await import(`${root}/dist/server/entry-server.js`!)).render;
         const script =
@@ -53,9 +60,9 @@ async function createServer() {
         const assets = { style, script };
         render(req, res, assets);
       } else {
+        // template = fs.readFileSync(`${root}/index.html`, 'utf-8')
+        // template = await viteServer.transformIndexHtml(url, template)
         const { render } = await viteServer.ssrLoadModule(`src/entry-server.tsx`);
-        console.log(render);
-
         const assets = { script: 'src/entry-client.tsx' };
         render(req, res, assets);
       }
