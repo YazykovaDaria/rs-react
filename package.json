@@ -4,9 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "dev:server": "nodemon server/server.ts",
-    "build": "tsc && vite build",
+    "dev": "nodemon server/server.ts",
+    "build": "npm run build:client && npm run build:server",
+    "build:client": "tsc && vite build --outDir dist/client",
+    "build:server": " tsc && vite build --ssr src/entry-server.tsx --outDir dist/server",
     "preview": "vite preview",
     "test": "vitest run --coverage",
     "lint": "eslint ./src",
