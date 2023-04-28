@@ -5,9 +5,12 @@ import { Provider } from 'react-redux';
 import { StaticRouter } from 'react-router-dom/server';
 import Router from './app/Router';
 import { setupStore } from './redux/store';
+import { cardsApi } from './redux/slices/cardsApi';
 
 export const render = async (request: express.Request, options: RenderToPipeableStreamOptions) => {
   const initialStore = setupStore({});
+  await initialStore.dispatch(cardsApi.endpoints.updateCards.initiate(''));
+
   const preloadedState = initialStore.getState();
 
   const injectPreload = () => {
