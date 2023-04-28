@@ -1,10 +1,12 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "lib": ["dom", "esnext", "dom.iterable"],
+    "lib": ["dom", "ESNext", "dom.iterable"],
     "jsx": "react",
-    "module": "esnext",
+    "module": "ESNext",
+    "outDir": "dist",
     "moduleResolution": "node",
+    "sourceMap": true,
     "noImplicitAny": true,
     "noFallthroughCasesInSwitch": true,
     "allowSyntheticDefaultImports": true,
@@ -13,6 +15,8 @@
     "strict": true,
     "skipLibCheck": true,
     "baseUrl": ".",
+    "allowJs": true,
+    "types": ["vite/client", "node", "vitest/globals", "cypress"],
     "paths": {
       "src/*": ["src/*"]
     },
@@ -21,6 +25,13 @@
   "include": [
     ".eslintrc.cjs",
     "vite.config.ts",
-    "src"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+    "src",
+    "cypress.config.ts",
+    "server",
+    "cypress"],
+  "references": [{ "path": "./tsconfig.node.json" }],
+  "ts-node": {
+    "esm": true,
+    "transpileOnly": true,
+  },
 }

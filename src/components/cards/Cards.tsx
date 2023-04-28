@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from 'src/hooks/reduxHook';
-import { fetchCards } from 'src/redux/slices/cards';
+import React, { useState } from 'react';
+import { useAppSelector } from 'src/hooks/reduxHook';
+import { useUpdateCardsQuery } from 'src/redux/slices/cardsApi';
 import Card from 'src/types/card';
 import CardItem from './Card';
 import DetailCard from './DetailCard';
@@ -8,33 +8,27 @@ import Spiner from '../spinner/Spinner';
 import Modal from '../modal/Modal';
 
 function Cards() {
-  const dispatch = useAppDispatch();
-  const { cards, isLoading, error, search } = useAppSelector((state) => state.cards);
-
-  const getSearchUrl = (url: string) => `/?name=${url}`;
-
-  useEffect(() => {
-    const fetchData = async () => {
-      dispatch(fetchCards(getSearchUrl(search)));
-    };
-    fetchData();
-  }, [search, dispatch]);
-
   const [isModal, setModal] = useState(false);
 
   const [cardDetail, setCardDetail] = useState<Card | null>(null);
+  const { search } = useAppSelector((state) => state.cards);
+
+  const getSearchUrl = (url: string) => `/?name=${url}`;
+  const { data, isLoading, error } = useUpdateCardsQuery(getSearchUrl(search));
+
+  if (error || !data) {
+    return <p>Nothing was found for yor request</p>;
+  }
+
+  const { results } = data;
 
   const showModal = (id: number) => {
-    const card = cards.find((card) => card.id === id);
+    const card = results.find((card: Card) => card.id === id);
     if (card) {
       setCardDetail(card);
       setModal(true);
     }
   };
-
-  if (error) {
-    return <p>{error}</p>;
-  }
 
   return (
     <div data-testid="cards">
@@ -45,9 +39,10 @@ function Cards() {
 
       <h2 className="title">Rick and Morty characters</h2>
       <div className="cards">
-        {cards.map((card) => (
-          <CardItem key={card.id} card={card} showCardInfo={showModal} />
-        ))}
+        {results &&
+          results.map((card: Card) => (
+            <CardItem key={card.id} card={card} showCardInfo={showModal} />
+          ))}
       </div>
     </div>
   );

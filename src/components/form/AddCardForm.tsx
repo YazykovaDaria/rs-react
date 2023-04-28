@@ -102,6 +102,7 @@ const AddCardForm = () => {
       <div className="form">
         <p>Select your favorite programming language:</p>
         <select
+          id="language"
           {...register('language', {
             minLength: {
               value: 2,

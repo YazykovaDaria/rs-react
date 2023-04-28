@@ -31,13 +31,13 @@ const Header: React.FC<EmptyProps> = () => {
       <div className="header">
         <div className="title">{activePage}</div>
         <div className="header header-links">
-          <NavLink to="/" className="link">
+          <NavLink to="/" className="link" data-testid="link-main">
             Main
           </NavLink>
-          <NavLink to="/about" className="link">
+          <NavLink to="/about" className="link" data-testid="link-about">
             About Us
           </NavLink>
-          <NavLink to="/form" className="link">
+          <NavLink to="/form" className="link" data-testid="link-form">
             Form
           </NavLink>
         </div>
