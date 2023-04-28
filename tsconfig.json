@@ -16,6 +16,7 @@
     "skipLibCheck": true,
     "baseUrl": ".",
     "allowJs": true,
+    "types": ["vite/client", "node", "vitest/globals", "cypress"],
     "paths": {
       "src/*": ["src/*"]
     },
