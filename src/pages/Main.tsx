@@ -5,7 +5,7 @@ import Cards from 'src/components/cards/Cards';
 
 function Main() {
   return (
-    <div className="wrapper">
+    <div className="wrapper" data-testid="main">
       <Search />
       <Cards></Cards>
     </div>
