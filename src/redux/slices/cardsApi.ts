@@ -29,9 +29,10 @@ export const cardsApi = createApi({
     updateCards: build.query<CardsResponse, string>({
       query: (url: string) => url,
       providesTags: ['Cards'],
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      transformResponse: (res: any) => {
-        return res;
+
+      transformResponse: (res: unknown): CardsResponse => {
+        const data: CardsResponse = res as CardsResponse;
+        return data;
       },
     }),
   }),

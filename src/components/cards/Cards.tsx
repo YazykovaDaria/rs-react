@@ -14,11 +14,12 @@ function Cards() {
   const { search } = useAppSelector((state) => state.cards);
 
   const getSearchUrl = (url: string) => `/?name=${url}`;
-  const { data, isLoading } = useUpdateCardsQuery(getSearchUrl(search));
+  const { data, isLoading, error } = useUpdateCardsQuery(getSearchUrl(search));
 
-  if (!data) {
+  if (error || !data) {
     return <p>Nothing was found for yor request</p>;
   }
+
   const { results } = data;
 
   const showModal = (id: number) => {
