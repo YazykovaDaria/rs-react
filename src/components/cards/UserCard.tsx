@@ -6,7 +6,7 @@ function UserCard(props: User) {
   const { name, date, img, pets, members, language } = props;
 
   return (
-    <div className="card">
+    <div className="card" data-testid="user-card">
       <p className="title">{name}</p>
       <div className="card-list">
         <img src={img} alt=" " />
